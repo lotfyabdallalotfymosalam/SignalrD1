@@ -4,7 +4,7 @@ namespace SignalrD1.Controllers
 {
     public class ChatController : Controller
     {
-        public IActionResult Chat()
+        public IActionResult Index()
         {
             return View();
         }
