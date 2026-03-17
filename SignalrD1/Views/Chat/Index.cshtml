@@ -1,16 +1,42 @@
 ﻿
 @{
-    ViewData["Title"] = "Chat";
+    ViewData["Title"] = "Index";
 }
 
 <h1>Chat</h1>
 
-<input type="text"  id="txt"/>
-<input type="button"  value="Send"  onclick="send()"/> <br/>
-<ul>
+<input type="text"  id="txt" />
+<input type="button" value="Send" onclick="send()" />
+<br />  
+<ul id="ul">
     <li id="messagesList">Example</li>
 </ul>
 
 
 
+@section Scripts {
+    <script src="~/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script>
+        name = prompt("Enter your name:");
 
+        // Create a connection to the SignalR hub
+        connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .build();
+        
+        // Start the connection
+        connection.start();
+
+        // define a function to consume the server method to receive messages from the hub
+        connection.on("NewMessage", function (n, m) {
+            $("#ul").append("<li>" + n + ": " + m + "</li>");
+        });
+
+
+        // define a function to consume the server method to send messages to the hub
+        function send() {
+            connection.invoke("SendMessage", name, $("#txt").val());
+        }
+
+    </script>
+}
